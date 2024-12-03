@@ -4,8 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cryptography</title>
+    <link rel="stylesheet" href="/static/stylesheet.css">
 </head>
 <body>
-    <h1>{{ message }}</h1>
+    <form method="POST">
+        <h1>Cryptography</h1>
+        <h4 for="text">Enter text to be encrypted:</h4>
+        <textarea id="text" name="text">{% if originalText %}{{originalText}}{% endif %}</textarea>
+
+        <h4 for="algorithm">Select Algorithm:</h4>
+        <select id="algorithm" name="algorithm">
+            <option value="caesar">Caesar Cipher</option>
+            <option value="base64">Base64</option>
+        </select><br>
+
+        <div id="shift">
+            <h4 for="shift">Shift for Caesar Cipher:</h4>
+            <input type="number" id="shift" name="shift" value="3"><br>
+        </div>
+
+        <h4 for="operation">Operation:</h4>
+        <select id="operation" name="operation">
+            <option value="encrypt">Encrypt</option>
+            <option value="decrypt">Decrypt</option>
+        </select>
+
+        <button type="submit">Submit</button>
+    </form>
+
+
+    <div id="resultDiv">
+        <h1 id="result">Result</h1>
+        <p>{% if result %}{{result}}{% endif %}</p>
+    </div>
+    <script>
+        const algorithm = document.getElementById('algorithm');
+        const shiftAmount = document.getElementById('shift');
+        algorithm.addEventListener("change", () => 
+        {
+            if (algorithm.value === "caesar") 
+            {
+                shiftAmount.style.display = "block";
+            } 
+            else 
+            {
+                shiftAmount.style.display = "none";
+            }
+        });
+    </script>
 </body>
 </html>

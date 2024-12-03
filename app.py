@@ -39,7 +39,7 @@ def index():
         elif algorithm == "base64":
             result = base64_cipher(text, decrypt=(operation == "decrypt"))
     
-    return render_template("index.html", result=result)
+    return render_template("index.html", result=result, originalText = text)
 
 if __name__ == "__main__":
     app.run(debug=True)
