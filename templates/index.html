@@ -10,39 +10,39 @@
     <form method="POST">
         <h1>Cryptography</h1>
         <h4 for="text">Enter text to be encrypted:</h4>
-        <textarea id="text" name="text">{% if originalText %}{{originalText}}{% endif %}</textarea>
+        <textarea id="text" name="text">{% if originalText %}{{ originalText }}{% endif %}</textarea>
 
         <h4 for="algorithm">Select Algorithm:</h4>
         <select id="algorithm" name="algorithm">
-            <option value="caesar">Caesar Cipher</option>
-            <option value="base64">Base64</option>
-            <option value="des">DES</option>
-            <option value="idcipher">IdCipher</option>
-        </select><br>
+            <option value="caesar" {% if selectedAlgorithm == "caesar" %}selected{% endif %}>Caesar Cipher</option>
+            <option value="base64" {% if selectedAlgorithm == "base64" %}selected{% endif %}>Base64</option>
+            <option value="des" {% if selectedAlgorithm == "des" %}selected{% endif %}>DES</option>
+            <option value="idcipher" {% if selectedAlgorithm == "idcipher" %}selected{% endif %}>IdCipher</option>
+            <option value="savelson" {% if selectedAlgorithm == "savelson" %}selected{% endif %}>SavelsonCipher</option>
+        </select>
 
-        <div id="shift">
+        <div id="shift" style="display: none">
             <h4 for="shift">Shift for Caesar Cipher:</h4>
-            <input type="number" id="shift" name="shift" value="3"><br>
+            <input type="number" id="shift" name="shift" value="{{ selectedShift }}">
         </div>
 
-        <div id="key">
+        <div id="key" style="display: none">
             <h4 for="key">Key for DES:</h4>
-            <input type="text" id="key" name="key" value="AABB09182736CCDD"><br>
+            <input type="text" id="key" name="key" value="{{ selectedKey }}">
         </div>
 
         <h4 for="operation">Operation:</h4>
         <select id="operation" name="operation">
-            <option value="encrypt">Encrypt</option>
-            <option value="decrypt">Decrypt</option>
+            <option value="encrypt" {% if selectedOperation == "encrypt" %}selected{% endif %}>Encrypt</option>
+            <option value="decrypt" {% if selectedOperation == "decrypt" %}selected{% endif %}>Decrypt</option>
         </select>
 
         <button type="submit">Submit</button>
     </form>
 
-
     <div id="resultDiv">
         <h1 id="result">Result</h1>
-        <p>{% if result %}{{result}}{% endif %}</p>
+        <p>{% if result %}{{ result }}{% endif %}</p>
     </div>
     <script>
         const algorithm = document.getElementById('algorithm');
@@ -58,14 +58,15 @@
             {
                 shiftAmount.style.display = "none";
             }
-            if(algorithm.value === "des"){
+            if (algorithm.value === "des") 
+            {
                 key.style.display = "block";
-            }
-            else{
+            } 
+            else 
+            {
                 key.style.display = "none";
             }
         });
     </script>
-    
 </body>
 </html>

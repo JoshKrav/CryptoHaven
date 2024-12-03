@@ -68,36 +68,87 @@ class IdCipher:
             text += chr(ord(char) - shift)  
         return text
 
+"""Function that has key generation for the SavelsonCipher"""
+def savelsonKeyGenerator():
+    #divide each letter in my last namy ascii value by 7 because it's my favorite number
+    key = "Savelson"
+    key_values = []
+    for char in key:
+        key_values.append(ord(char) // 7)
+    return key_values
+
+"""Function that has logic for the SavelsonCipher, which uses my last name (Dylan) and some math to encrypt/decrypt"""
+def savelson_cipher(text, decrypt=False):
+    key_values = savelsonKeyGenerator()
+    new_text = ""
+
+    if decrypt:
+        #add key value from ascii of character
+        for i, char in enumerate(text):
+            key_value = key_values[i % len(key_values)]  
+            new_text += chr(ord(char) + key_value)
+    else:
+        #subtract key value from ascii of character
+        for i, char in enumerate(text):
+            key_value = key_values[i % len(key_values)]
+            new_text += chr(ord(char) - key_value)  
+
+    return new_text
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = ""
+    text = ""
+    algorithm = "base64"
+    shift = 3  
+    key = "" 
+    operation = "encrypt"  
+
     if request.method == "POST":
         text = request.form["text"]
         algorithm = request.form["algorithm"]
         operation = request.form["operation"]
+
+        if algorithm == "caesar":
+            shift = int(request.form["shift"])
+        
+        if algorithm == "des":
+            key = request.form["key"]
         
         if algorithm == "caesar":
-            shift = int(request.form["shift"]) 
             result = caesar_cipher(text, shift, decrypt=(operation == "decrypt"))
+
         elif algorithm == "base64":
             result = base64_cipher(text, decrypt=(operation == "decrypt"))
+
         elif algorithm == "idcipher":
             cipher = IdCipher("2271524")
             if(operation == "decrypt"):
                 result = cipher.decrypt(text)
             else:
                 result = cipher.encrypt(text)
+
         elif algorithm == "des":
-            key = str(request.form["key"]) 
+            key = str(request.form["key"])
             key = binascii.unhexlify(key)
             assert len(key) == 8, "Key must be exactly 8 bytes for DES."
             if(operation == "decrypt"):
-                result = des_decrypt(text,key)
+                result = des_decrypt(text, key)
             else:
-                result = des_encrypt(text,key)
-        return render_template("index.html", result=result, originalText = text)
+                result = des_encrypt(text, key)
 
-    return render_template("index.html", result=result)
-
+        elif algorithm == "savelson":
+            result = savelson_cipher(text, decrypt=(operation == "decrypt"))
+    
+    return render_template(
+        "index.html",
+        result=result,
+        originalText=text,
+        selectedAlgorithm=algorithm,
+        selectedOperation=operation,
+        selectedShift=shift,
+        selectedKey=key
+    )
 if __name__ == "__main__":
     app.run(debug=True)
