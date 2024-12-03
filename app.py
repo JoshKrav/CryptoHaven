@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request
+from Crypto.Cipher import DES
+import binascii
 import base64
 
 app = Flask(__name__)
@@ -25,10 +27,22 @@ def base64_cipher(text, decrypt=False):
         return base64.b64decode(text.encode()).decode()
     return base64.b64encode(text.encode()).decode()
 
-"""Class that has logic for the IdCipher, which uses my student Id(Josh) to encrypt/decrypt
-    A class was used as it makes it easier to read and also is more efficient.
+"""Encrypts plaintext using DES."""
+def des_encrypt(text, key):
+    des = DES.new(key, DES.MODE_ECB)
+    text = ciphertext = binascii.unhexlify(text)
+    ciphertext = des.encrypt(text)
+    return binascii.hexlify(ciphertext).decode()
 
-"""
+"""Decrypts ciphertext using DES."""
+def des_decrypt(ciphertext, key):
+    des = DES.new(key, DES.MODE_ECB)  # Decode hex to binary
+    ciphertext = binascii.unhexlify(ciphertext)
+    decrypted_text = des.decrypt(ciphertext)
+    return binascii.hexlify(decrypted_text).decode()
+
+"""Class that has logic for the IdCipher, which uses my student Id(Josh) to encrypt/decrypt
+    A class was used as it makes it easier to read and also is more efficient."""
 class IdCipher:
     def __init__(self, key="2271524"):
         self.key = []
@@ -73,6 +87,14 @@ def index():
                 result = cipher.decrypt(text)
             else:
                 result = cipher.encrypt(text)
+        elif algorithm == "des":
+            key = str(request.form["key"]) 
+            key = binascii.unhexlify(key)
+            assert len(key) == 8, "Key must be exactly 8 bytes for DES."
+            if(operation == "decrypt"):
+                result = des_decrypt(text,key)
+            else:
+                result = des_encrypt(text,key)
         return render_template("index.html", result=result, originalText = text)
 
     return render_template("index.html", result=result)

@@ -16,12 +16,18 @@
         <select id="algorithm" name="algorithm">
             <option value="caesar">Caesar Cipher</option>
             <option value="base64">Base64</option>
+            <option value="des">DES</option>
             <option value="idcipher">IdCipher</option>
         </select><br>
 
         <div id="shift">
             <h4 for="shift">Shift for Caesar Cipher:</h4>
             <input type="number" id="shift" name="shift" value="3"><br>
+        </div>
+
+        <div id="key">
+            <h4 for="key">Key for DES:</h4>
+            <input type="text" id="key" name="key" value="AABB09182736CCDD"><br>
         </div>
 
         <h4 for="operation">Operation:</h4>
@@ -41,6 +47,7 @@
     <script>
         const algorithm = document.getElementById('algorithm');
         const shiftAmount = document.getElementById('shift');
+        const key = document.getElementById("key");
         algorithm.addEventListener("change", () => 
         {
             if (algorithm.value === "caesar") 
@@ -51,7 +58,14 @@
             {
                 shiftAmount.style.display = "none";
             }
+            if(algorithm.value === "des"){
+                key.style.display = "block";
+            }
+            else{
+                key.style.display = "none";
+            }
         });
     </script>
+    
 </body>
 </html>
