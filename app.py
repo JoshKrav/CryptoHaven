@@ -25,6 +25,35 @@ def base64_cipher(text, decrypt=False):
         return base64.b64decode(text.encode()).decode()
     return base64.b64encode(text.encode()).decode()
 
+"""Class that has logic for the IdCipher, which uses my student Id(Josh) to encrypt/decrypt
+    A class was used as it makes it easier to read and also is more efficient.
+
+"""
+class IdCipher:
+    def __init__(self, key="2271524"):
+        self.key = []
+        # Convert key into a list of integers
+        for digit in key:
+            self.key.append(int(digit))
+    
+    def encrypt(self, text):
+        ciphertext = ""
+        for i, char in enumerate(text):
+            #Gets int
+            shift = self.key[i % len(self.key)]
+            #Shifts character forward
+            ciphertext += chr(ord(char) + shift)  
+        return ciphertext
+
+    def decrypt(self, ciphertext):
+        text = ""
+        for i, char in enumerate(ciphertext):
+            #Gets int
+            shift = self.key[i % len(self.key)]
+            #Shifts character backwards
+            text += chr(ord(char) - shift)  
+        return text
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = ""
@@ -38,6 +67,12 @@ def index():
             result = caesar_cipher(text, shift, decrypt=(operation == "decrypt"))
         elif algorithm == "base64":
             result = base64_cipher(text, decrypt=(operation == "decrypt"))
+        elif algorithm == "idcipher":
+            cipher = IdCipher("2271524")
+            if(operation == "decrypt"):
+                result = cipher.decrypt(text)
+            else:
+                result = cipher.encrypt(text)
         return render_template("index.html", result=result, originalText = text)
 
     return render_template("index.html", result=result)
