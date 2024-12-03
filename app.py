@@ -38,8 +38,9 @@ def index():
             result = caesar_cipher(text, shift, decrypt=(operation == "decrypt"))
         elif algorithm == "base64":
             result = base64_cipher(text, decrypt=(operation == "decrypt"))
-    
-    return render_template("index.html", result=result, originalText = text)
+        return render_template("index.html", result=result, originalText = text)
+
+    return render_template("index.html", result=result)
 
 if __name__ == "__main__":
     app.run(debug=True)
