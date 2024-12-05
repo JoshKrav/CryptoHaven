@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from Crypto.Cipher import DES
-from pycipher import Vigenere
+from pycipher import Vigenere,SimpleSubstitution
 import binascii
 import base64
 
@@ -144,7 +144,12 @@ def index():
                 result = Vigenere(key.capitalize()).decipher(text.capitalize())
             else:
                 result = Vigenere(key.capitalize()).encipher(text.capitalize())
-
+        elif algorithm == "substitution":
+            key = str(request.form["key"])
+            if(operation == "decrypt"):
+                result = SimpleSubstitution(key).decipher(text)
+            else:
+                result = SimpleSubstitution(key).encipher(text)
         elif algorithm == "savelson":
             result = savelson_cipher(text, decrypt=(operation == "decrypt"))
     

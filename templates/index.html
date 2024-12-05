@@ -17,6 +17,7 @@
             <option value="caesar" {% if selectedAlgorithm == "caesar" %}selected{% endif %}>Caesar Cipher</option>
             <option value="base64" {% if selectedAlgorithm == "base64" %}selected{% endif %}>Base64</option>
             <option value="des" {% if selectedAlgorithm == "des" %}selected{% endif %}>DES</option>
+            <option value="substitution" {% if selectedAlgorithm == "des" %}selected{% endif %}>Substitution Cipher</option>
             <option value="viginere" {% if selectedAlgorithm == "viginere" %}selected{% endif %}>Viginere Cipher</option>
             <option value="idcipher" {% if selectedAlgorithm == "idcipher" %}selected{% endif %}>IdCipher</option>
             <option value="savelson" {% if selectedAlgorithm == "savelson" %}selected{% endif %}>SavelsonCipher</option>
@@ -59,7 +60,7 @@
             {
                 shiftAmount.style.display = "none";
             }
-            if (algorithm.value === "des" || algorithm.value =="viginere") 
+            if (algorithm.value === "des" || algorithm.value =="viginere" || algorithm.value == "substitution") 
             {
                 key.style.display = "block";
             } 
