@@ -28,19 +28,119 @@ def base64_cipher(text, decrypt=False):
         return base64.b64decode(text.encode()).decode()
     return base64.b64encode(text.encode()).decode()
 
-"""Encrypts plaintext using DES."""
-def des_encrypt(text, key):
-    des = DES.new(key, DES.MODE_ECB)
-    text = ciphertext = binascii.unhexlify(text)
-    ciphertext = des.encrypt(text)
-    return binascii.hexlify(ciphertext).decode()
+"""Encrypts plaintext using railfence.
+    ref: https://www.geeksforgeeks.org/rail-fence-cipher-encryption-decryption/"""
+def railfence_encrypt(text, key):
+    # create the matrix to cipher
+    # plain text key = rows ,
+    # length(text) = columns
+    # filling the rail matrix
+    # to distinguish filled
+    # spaces from blank ones
+    rail = [['\n' for i in range(len(text))]
+                for j in range(key)]
+     
+    # to find the direction
+    dir_down = False
+    row, col = 0, 0
+     
+    for i in range(len(text)):
+         
+        # check the direction of flow
+        # reverse the direction if we've just
+        # filled the top or bottom rail
+        if (row == 0) or (row == key - 1):
+            dir_down = not dir_down
+         
+        # fill the corresponding alphabet
+        rail[row][col] = text[i]
+        col += 1
+         
+        # find the next row using
+        # direction flag
+        if dir_down:
+            row += 1
+        else:
+            row -= 1
+    # now we can construct the cipher
+    # using the rail matrix
+    result = []
+    for i in range(key):
+        for j in range(len(text)):
+            if rail[i][j] != '\n':
+                result.append(rail[i][j])
+    return("" . join(result))
 
-"""Decrypts ciphertext using DES."""
-def des_decrypt(ciphertext, key):
-    des = DES.new(key, DES.MODE_ECB)  # Decode hex to binary
-    ciphertext = binascii.unhexlify(ciphertext)
-    decrypted_text = des.decrypt(ciphertext)
-    return binascii.hexlify(decrypted_text).decode()
+"""Decrypts ciphertext using railfence.
+    ref: https://www.geeksforgeeks.org/rail-fence-cipher-encryption-decryption/"""
+def railfence_decrypt(text, key):
+ 
+    # create the matrix to cipher
+    # plain text key = rows ,
+    # length(text) = columns
+    # filling the rail matrix to
+    # distinguish filled spaces
+    # from blank ones
+    rail = [['\n' for i in range(len(cipher))]
+                for j in range(key)]
+     
+    # to find the direction
+    dir_down = None
+    row, col = 0, 0
+     
+    # mark the places with '*'
+    for i in range(len(cipher)):
+        if row == 0:
+            dir_down = True
+        if row == key - 1:
+            dir_down = False
+         
+        # place the marker
+        rail[row][col] = '*'
+        col += 1
+         
+        # find the next row
+        # using direction flag
+        if dir_down:
+            row += 1
+        else:
+            row -= 1
+             
+    # now we can construct the
+    # fill the rail matrix
+    index = 0
+    for i in range(key):
+        for j in range(len(cipher)):
+            if ((rail[i][j] == '*') and
+            (index < len(cipher))):
+                rail[i][j] = cipher[index]
+                index += 1
+         
+    # now read the matrix in
+    # zig-zag manner to construct
+    # the resultant text
+    result = []
+    row, col = 0, 0
+    for i in range(len(cipher)):
+         
+        # check the direction of flow
+        if row == 0:
+            dir_down = True
+        if row == key-1:
+            dir_down = False
+             
+        # place the marker
+        if (rail[row][col] != '*'):
+            result.append(rail[row][col])
+            col += 1
+             
+        # find the next row using
+        # direction flag
+        if dir_down:
+            row += 1
+        else:
+            row -= 1
+    return("".join(result))
 
 """Class that has logic for the IdCipher, which uses my student Id(Josh) to encrypt/decrypt
     A class was used as it makes it easier to read and also is more efficient."""
@@ -111,13 +211,16 @@ def index():
         algorithm = request.form["algorithm"]
         operation = request.form["operation"]
 
-        if algorithm == "caesar":
+
+        if algorithm == "railfence":
             shift = int(request.form["shift"])
+            if(operation == "decrypt"):
+                result = railfence_decrypt(text,shift)
+            else:
+                result = railfence_encrypt(text,shift)
         
-        if algorithm == "des":
-            key = request.form["key"]
-        
-        if algorithm == "caesar":
+        elif algorithm == "caesar":
+            shift = int(request.form["shift"])
             result = caesar_cipher(text, shift, decrypt=(operation == "decrypt"))
 
         elif algorithm == "base64":
@@ -130,14 +233,6 @@ def index():
             else:
                 result = cipher.encrypt(text)
 
-        elif algorithm == "des":
-            key = str(request.form["key"])
-            key = binascii.unhexlify(key)
-            assert len(key) == 8, "Key must be exactly 8 bytes for DES."
-            if(operation == "decrypt"):
-                result = des_decrypt(text, key)
-            else:
-                result = des_encrypt(text, key)
         elif algorithm == "viginere":
             key = str(request.form["key"])
             if(operation == "decrypt"):
@@ -145,7 +240,7 @@ def index():
             else:
                 result = Vigenere(key.capitalize()).encipher(text.capitalize())
         elif algorithm == "substitution":
-            key = str(request.form["key"])
+            key = str(request.form["subkey"])
             if(operation == "decrypt"):
                 result = SimpleSubstitution(key).decipher(text)
             else:

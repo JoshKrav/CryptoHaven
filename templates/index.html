@@ -16,21 +16,26 @@
         <select id="algorithm" name="algorithm">
             <option value="caesar" {% if selectedAlgorithm == "caesar" %}selected{% endif %}>Caesar Cipher</option>
             <option value="base64" {% if selectedAlgorithm == "base64" %}selected{% endif %}>Base64</option>
-            <option value="des" {% if selectedAlgorithm == "des" %}selected{% endif %}>DES</option>
-            <option value="substitution" {% if selectedAlgorithm == "des" %}selected{% endif %}>Substitution Cipher</option>
+            <option value="railfence" {% if selectedAlgorithm == "railfence" %}selected{% endif %}>Railfence</option>
+            <option value="substitution" {% if selectedAlgorithm == "substitution" %}selected{% endif %}>Substitution Cipher</option>
             <option value="viginere" {% if selectedAlgorithm == "viginere" %}selected{% endif %}>Viginere Cipher</option>
             <option value="idcipher" {% if selectedAlgorithm == "idcipher" %}selected{% endif %}>IdCipher</option>
             <option value="savelson" {% if selectedAlgorithm == "savelson" %}selected{% endif %}>SavelsonCipher</option>
         </select>
 
         <div id="shift" style="display: none">
-            <h4 for="shift">Shift for Caesar Cipher:</h4>
+            <h4 for="shift">Shift:</h4>
             <input type="number" id="shift" name="shift" value="{{ selectedShift }}">
         </div>
 
         <div id="key" style="display: none">
             <h4 for="key">Key:</h4>
             <input type="text" id="key" name="key" value="{{ selectedKey }}">
+        </div>
+
+        <div id="subkey" style="display: none">
+            <h4 for="subkey">Substitution Key:</h4>
+            <input minlength="26" maxlength="26" type="text" id="subkey" name="subkey" value="{{ selectedKey }}">
         </div>
 
         <h4 for="operation">Operation:</h4>
@@ -50,9 +55,12 @@
         const algorithm = document.getElementById('algorithm');
         const shiftAmount = document.getElementById('shift');
         const key = document.getElementById("key");
-        algorithm.addEventListener("change", () => 
+        const subkey = document.getElementById("subkey");
+        const updateFieldVisibility = () => 
         {
-            if (algorithm.value === "caesar") 
+            const selectedAlgorithm = algorithm.value;
+
+            if (selectedAlgorithm === "railfence" || selectedAlgorithm === "caesar") 
             {
                 shiftAmount.style.display = "block";
             } 
@@ -60,7 +68,8 @@
             {
                 shiftAmount.style.display = "none";
             }
-            if (algorithm.value === "des" || algorithm.value =="viginere" || algorithm.value == "substitution") 
+
+            if (selectedAlgorithm === "viginere") 
             {
                 key.style.display = "block";
             } 
@@ -68,7 +77,19 @@
             {
                 key.style.display = "none";
             }
-        });
+
+            if (selectedAlgorithm === "substitution") 
+            {
+                subkey.style.display = "block";
+            } 
+            else 
+            {
+                subkey.style.display = "none";
+            }
+        };
+
+        window.onload = updateFieldVisibility;
+        algorithm.addEventListener("change", updateFieldVisibility);
     </script>
 </body>
 </html>
