@@ -17,6 +17,7 @@
             <option value="caesar" {% if selectedAlgorithm == "caesar" %}selected{% endif %}>Caesar Cipher</option>
             <option value="base64" {% if selectedAlgorithm == "base64" %}selected{% endif %}>Base64</option>
             <option value="des" {% if selectedAlgorithm == "des" %}selected{% endif %}>DES</option>
+            <option value="viginere" {% if selectedAlgorithm == "viginere" %}selected{% endif %}>Viginere Cipher</option>
             <option value="idcipher" {% if selectedAlgorithm == "idcipher" %}selected{% endif %}>IdCipher</option>
             <option value="savelson" {% if selectedAlgorithm == "savelson" %}selected{% endif %}>SavelsonCipher</option>
         </select>
@@ -27,7 +28,7 @@
         </div>
 
         <div id="key" style="display: none">
-            <h4 for="key">Key for DES:</h4>
+            <h4 for="key">Key:</h4>
             <input type="text" id="key" name="key" value="{{ selectedKey }}">
         </div>
 
@@ -58,7 +59,7 @@
             {
                 shiftAmount.style.display = "none";
             }
-            if (algorithm.value === "des") 
+            if (algorithm.value === "des" || algorithm.value =="viginere") 
             {
                 key.style.display = "block";
             } 

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from Crypto.Cipher import DES
+from pycipher import Vigenere
 import binascii
 import base64
 
@@ -137,6 +138,12 @@ def index():
                 result = des_decrypt(text, key)
             else:
                 result = des_encrypt(text, key)
+        elif algorithm == "viginere":
+            key = str(request.form["key"])
+            if(operation == "decrypt"):
+                result = Vigenere(key.capitalize()).decipher(text.capitalize())
+            else:
+                result = Vigenere(key.capitalize()).encipher(text.capitalize())
 
         elif algorithm == "savelson":
             result = savelson_cipher(text, decrypt=(operation == "decrypt"))
