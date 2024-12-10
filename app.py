@@ -81,7 +81,7 @@ def railfence_decrypt(text, key):
     # filling the rail matrix to
     # distinguish filled spaces
     # from blank ones
-    rail = [['\n' for i in range(len(cipher))]
+    rail = [['\n' for i in range(len(text))]
                 for j in range(key)]
      
     # to find the direction
@@ -89,7 +89,7 @@ def railfence_decrypt(text, key):
     row, col = 0, 0
      
     # mark the places with '*'
-    for i in range(len(cipher)):
+    for i in range(len(text)):
         if row == 0:
             dir_down = True
         if row == key - 1:
@@ -110,10 +110,10 @@ def railfence_decrypt(text, key):
     # fill the rail matrix
     index = 0
     for i in range(key):
-        for j in range(len(cipher)):
+        for j in range(len(text)):
             if ((rail[i][j] == '*') and
-            (index < len(cipher))):
-                rail[i][j] = cipher[index]
+            (index < len(text))):
+                rail[i][j] = text[index]
                 index += 1
          
     # now read the matrix in
@@ -121,7 +121,7 @@ def railfence_decrypt(text, key):
     # the resultant text
     result = []
     row, col = 0, 0
-    for i in range(len(cipher)):
+    for i in range(len(text)):
          
         # check the direction of flow
         if row == 0:
