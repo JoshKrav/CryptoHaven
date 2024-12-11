@@ -19,6 +19,7 @@ It's all done locally so there's little chance for any information put through o
    2. **Place Repo In Any Application That Can Run Python(e.g Visual Studio Code):**
 
    3. **Install Necessary Packages**
+      
    In your application's terminal:
    ```bash
    pip install flask
