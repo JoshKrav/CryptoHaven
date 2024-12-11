@@ -11,20 +11,21 @@ It's all done locally so there's little chance for any information put through o
 ## 🛠 Installation Steps
 
 
-1. **Clone the repository in your terminal:**
+   1. **Clone the repository in your terminal:**
    ```bash
    git clone https://github.com/JoshKrav/CryptoHaven
    ```
    
-   3.**Place Repo In Any Application That Can Run Python(e.g Visual Studio Code):**
+   2. **Place Repo In Any Application That Can Run Python(e.g Visual Studio Code):**
 
-   4.**Install Necessary Packages**
+   3. **Install Necessary Packages**
    In your application's terminal:
    ```bash
    pip install flask
    pip install pycipher  
    ```
-   4.**Enjoy!**
+
+   4. **Enjoy!**
 
 ### 📚 References
 
